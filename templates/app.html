@@ -4,7 +4,72 @@
     <meta charset="UTF-8">
     <title>Couriers' App</title>
 </head>
+
 <body>
-{{ username }}
+<div align="right">
+    <p>Logged in as {{ username }}</p>
+    <p><a href="/logout/">Logout</a></p>
+</div>
+<div align="center">
+    <form action="" method="post">
+        <label for="pf">Профинтерна</label>
+        <input type="radio" name="restaurant" id="pf" value="pf">
+        <label for="iz">Изумрудная</label>
+        <input type="radio" name="restaurant" id="iz" value="iz">
+        <label for="zc">Чурилово</label>
+        <input type="radio" name="restaurant" id="zc" value="zc">
+        <label for="bh">ЧМЗ</label>
+        <input type="radio" name="restaurant" id="bh" value="bh">
+        <label for="kt">Кирова</label>
+        <input type="radio" name="restaurant" id="kt" value="kt"><br>
+        <select size="2" name="date">
+            <option value="this_week">{{this week}}</option>
+            <option value="next_week">{{prev week}}</option>
+        </select><br>
+        <input type="submit" value="Выбрать">
+    </form>
+    <table border="0px">
+        <tr>
+            <td></td>
+            <td>10.30</td>
+            <td>16.00</td>
+        </tr>
+        <tr>
+            <td>ПН</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ВТ</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>СР</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ЧТ</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ПТ</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>СБ</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ВС</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>

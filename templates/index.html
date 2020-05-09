@@ -13,8 +13,8 @@
     <h3>Login</h3>
     <form action="" method="post">
         <p><label for="username"><input type="text" name="username" placeholder="Username"></label></p>
-        <p><label for="password"><input type="text" name="password" placeholder="Password"></label></p>
-            <input type="submit">
+        <p><label for="password"><input type="password" name="password" placeholder="Password"></label></p>
+            <input type="submit" value="Submit">
     </form>
     <br><a href="/reg/">Register</a>
     {% endif %}
@@ -23,12 +23,11 @@
     <h3>Register</h3>
         <form action="" method="post">
         <p><label for="username"><input type="text" name="username" placeholder="Username"></label></p>
-        <p><label for="password"><input type="password" name="password" placeholder="Password"></label></p>
-        <p><label for="password"><input type="password" name="password" placeholder="Password again"></label></p>
-        <input type="submit">
+        <p><label for="password1"><input type="password" name="password1" placeholder="Password"></label></p>
+        <p><label for="password2"><input type="password" name="password2" placeholder="Password again"></label></p>
+        <input type="submit" value="Submit">
     </form>
+    <br><a href="/">Login</a>
     {% endif %}
-    {% if user %}
-
 </body>
 </html>
