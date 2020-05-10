@@ -7,32 +7,30 @@
 
 <body>
 <div align="right">
-    <p>Logged in as {{ username }}</p>
+    <p>Logged in as {{ current_user.name }}</p>
     <p><a href="/logout/">Logout</a></p>
 </div>
 <div align="center">
     <form action="" method="post">
         <label for="pf">Профинтерна</label>
-        <input type="radio" name="restaurant" id="pf" value="pf">
-        <label for="iz">Изумрудная</label>
-        <input type="radio" name="restaurant" id="iz" value="iz">
-        <label for="zc">Чурилово</label>
-        <input type="radio" name="restaurant" id="zc" value="zc">
-        <label for="bh">ЧМЗ</label>
-        <input type="radio" name="restaurant" id="bh" value="bh">
-        <label for="kt">Кирова</label>
+        <input type="radio" name="restaurant" id="pf" value="pf"><br>
+        <label for="iz">Изумрудная&nbsp;&nbsp;&nbsp;</label>
+        <input type="radio" name="restaurant" id="iz" value="iz"><br>
+        <label for="zc">Чурилово&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+        <input type="radio" name="restaurant" id="zc" value="zc"><br>
+        <label for="bh">ЧМЗ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+        <input type="radio" name="restaurant" id="bh" value="bh"><br>
+        <label for="kt">Кирова&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
         <input type="radio" name="restaurant" id="kt" value="kt"><br>
-        <select size="2" name="date">
-            <option value="this_week">{{this week}}</option>
-            <option value="next_week">{{prev week}}</option>
-        </select><br>
         <input type="submit" value="Выбрать">
     </form>
+    <h3>{{week.get_date()}}</h3>
+    {% if restaurant_selected %}
     <table border="0px">
         <tr>
             <td></td>
-            <td>10.30</td>
-            <td>16.00</td>
+            <td>10:30</td>
+            <td>16:00</td>
         </tr>
         <tr>
             <td>ПН</td>
@@ -70,6 +68,7 @@
             <td></td>
         </tr>
     </table>
+    {% endif %}
 </div>
 </body>
 </html>

@@ -34,8 +34,8 @@ class Day:
 
 
 class Week:
-    def __init__(self):
-        self.begin_date = datetime.datetime.today().date()
+    def __init__(self, begin_date=datetime.datetime.today().date()):
+        self.begin_date = begin_date
         while self.begin_date.isoweekday() != 1:
             self.begin_date += datetime.timedelta(days=1)
         self.end_date = self.begin_date + datetime.timedelta(days=6)
@@ -59,10 +59,10 @@ class Week:
     # restaurant 0-4: pf-kt
     # shift 0/1: morning/evening
     def add_vacancy(self, day, restaurant, shift):
-        self.schedule[day][restaurant][shift].append(None)
+        self.schedule[day].shifts[restaurant][shift].append(None)
 
     def remove_vacancy(self, day, restaurant, shift):
-        self.schedule[day][restaurant][shift].remove(None)
+        self.schedule[day].shifts[restaurant][shift].remove(None)
 
     def __str__(self):
         for i in self.schedule:
@@ -105,6 +105,9 @@ def save_schedule():
     with open('schedules', 'wb') as file:
         pickle.dump(schedule, file)
 
+
+schedule.append(Week(begin_date=datetime.datetime.today().date() - datetime.timedelta(days=7)))
+schedule.append(Week())
 
 app = Flask(__name__)
 current_user = False
@@ -176,19 +179,20 @@ def landing_reg():
 def schedule_app():
     global schedule
     global current_user
-    attempted_week = Week()
-    print(attempted_week)
+    time_now = datetime.datetime.today().time()
+    time_6pm = time_now.replace(hour=18, minute=0, second=0)
+    if datetime.datetime.today().isoweekday() == 7 and time_now > time_6pm:
+        if Week().begin_date != schedule[-1].begin_date:
+            schedule.append(Week())
+    week = schedule[-1]
     restaurant = False
-    date = False
     if request.method == 'POST':
         restaurant = request.form.get('restaurant')
-        date = request.form.get('date')
 
-    if restaurant and date:
+    if restaurant:
         print(restaurant)
-        print(date)
-
-    return render_template('app.html', username=current_user.name)
+        return render_template('app.html', current_user=current_user, week=week, restaurant_selected=True)
+    return render_template('app.html', current_user=current_user, week=week)
 
 
 @app.route('/logout/')
