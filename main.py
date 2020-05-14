@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request
+from flask import Flask, render_template, request
 import pickle
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
@@ -9,28 +9,25 @@ class User:
     def __init__(self, name, password):
         self.name = name
         self.password = generate_password_hash(password)
+        self.id = None
 
     def check_password(self, password_to_be_checked):
         return check_password_hash(self.password, password_to_be_checked)
 
 
-# defining schedule classes
-class Day:
-    def __init__(self, date):
-        self.date = date
-        self.shifts = [
-            [[None, None], [None]],
-            [[None], [None]],
-            [[None], [None]],
-            [[None], [None]],
-            [[None], [None]]
-        ]
+class Vacancy:
+    def __init__(self, id_num):
+        self.id = id_num
+        self.user = None
+        self.name = 'Free'
 
-    def __str__(self):
-        info = str(self.date)
-        for i in self.shifts:
-            info += '\n' + str(i)
-        return info
+    def set_user(self, user):
+        self.user = user
+        self.name = user.name
+
+    def remove_user(self):
+        self.user = None
+        self.name = 'Free'
 
 
 class Week:
@@ -39,15 +36,22 @@ class Week:
         while self.begin_date.isoweekday() != 1:
             self.begin_date += datetime.timedelta(days=1)
         self.end_date = self.begin_date + datetime.timedelta(days=6)
-        self.schedule = [
-            Day(self.begin_date),
-            Day(self.begin_date + datetime.timedelta(days=1)),
-            Day(self.begin_date + datetime.timedelta(days=2)),
-            Day(self.begin_date + datetime.timedelta(days=3)),
-            Day(self.begin_date + datetime.timedelta(days=4)),
-            Day(self.begin_date + datetime.timedelta(days=5)),
-            Day(self.begin_date + datetime.timedelta(days=6))
-        ]
+        self.load = 0
+        self.schedule = []
+        for day in range(7):
+            self.schedule.append([
+                [
+                    [Vacancy(self.load), Vacancy(self.load + 1), Vacancy(self.load + 2),
+                     Vacancy(self.load + 3)],
+                    [Vacancy(self.load + 4)]
+                ],
+                [[Vacancy(self.load + 5), Vacancy(self.load + 6)], [Vacancy(self.load + 7)]],
+                [[Vacancy(self.load + 8)], [Vacancy(self.load + 9)]],
+                [[Vacancy(self.load + 10)], [Vacancy(self.load + 11)]],
+                [[Vacancy(self.load + 12)], [Vacancy(self.load + 13)]]
+            ])
+            self.load += 14
+
         self.is_approved = False
 
     def approve(self):
@@ -59,10 +63,26 @@ class Week:
     # restaurant 0-4: pf-kt
     # shift 0/1: morning/evening
     def add_vacancy(self, day, restaurant, shift):
-        self.schedule[day].shifts[restaurant][shift].append(None)
+        self.load += 1
+        self.schedule[day][restaurant][shift].append(Vacancy(self.load))
 
-    def remove_vacancy(self, day, restaurant, shift):
-        self.schedule[day].shifts[restaurant][shift].remove(None)
+    def remove_vacancy(self, vacancy_id):
+        for day in self.schedule:
+            for rest in day:
+                for shift in rest:
+                    for vacancy in shift:
+                        if vacancy.id == vacancy_id:
+                            shift.remove(vacancy)
+                            break
+
+    def set_vacancy(self, vacancy_id, user):
+        for day in self.schedule:
+            for rest in day:
+                for shift in rest:
+                    for vacancy in shift:
+                        if vacancy.id == vacancy_id:
+                            vacancy.set_user(user)
+                            break
 
     def __str__(self):
         for i in self.schedule:
@@ -89,7 +109,7 @@ while not empty_file:
             empty_file = True
         except EOFError:
             with open('schedules', 'wb') as file:
-                pickle.dump([], file)
+                pickle.dump([Week(datetime.datetime.today().date() - datetime.timedelta(days=6))], file)
 
 
 # to save database every time it is modified
@@ -184,15 +204,26 @@ def schedule_app():
     if datetime.datetime.today().isoweekday() == 7 and time_now > time_6pm:
         if Week().begin_date != schedule[-1].begin_date:
             schedule.append(Week())
+            save_schedule()
     week = schedule[-1]
     restaurant = False
     if request.method == 'POST':
         restaurant = request.form.get('restaurant')
 
     if restaurant:
-        print(restaurant)
-        return render_template('app.html', current_user=current_user, week=week, restaurant_selected=True)
-    return render_template('app.html', current_user=current_user, week=week)
+        if restaurant == 'pf':
+            rest_id = 0
+        if restaurant == 'iz':
+            rest_id = 1
+        if restaurant == 'zc':
+            rest_id = 2
+        if restaurant == 'bh':
+            rest_id = 3
+        if restaurant == 'kt':
+            rest_id = 4
+        return render_template('app.html', current_user=current_user, week=week, restaurant_selected=True, rest_id=rest_id)
+    else:
+        return render_template('app.html', current_user=current_user, week=week)
 
 
 @app.route('/logout/')

@@ -3,6 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Couriers' App</title>
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+        }
+        td, th {
+            padding: 3px;
+            border-bottom: 1px solid black;
+        }
+    </style>
 </head>
 
 <body>
@@ -34,38 +43,94 @@
         </tr>
         <tr>
             <td>ПН</td>
-            <td></td>
-            <td></td>
+            <td>
+                {% for i in week.schedule[0][rest_id][0] %}
+                    {{ i.name }}<br>
+                {% endfor %}
+            </td>
+            <td>
+                {% for i in week.schedule[0][rest_id][1] %}
+                    {{ i.name }}<br>
+                {% endfor %}
+            </td>
         </tr>
         <tr>
             <td>ВТ</td>
-            <td></td>
-            <td></td>
+            <td>
+                {% for i in week.schedule[1][rest_id][0] %}
+                    {{ i.name }}<br>
+                {% endfor %}
+            </td>
+            <td>
+                {% for i in week.schedule[1][rest_id][1] %}
+                    {{ i.name }}<br>
+                {% endfor %}
+            </td>
         </tr>
         <tr>
             <td>СР</td>
-            <td></td>
-            <td></td>
+            <td>
+                {% for i in week.schedule[2][rest_id][0] %}
+                    {{ i.name }}<br>
+                {% endfor %}
+            </td>
+            <td>
+                {% for i in week.schedule[2][rest_id][1] %}
+                    {{ i.name }}<br>
+                {% endfor %}
+            </td>
         </tr>
         <tr>
             <td>ЧТ</td>
-            <td></td>
-            <td></td>
+            <td>
+                {% for i in week.schedule[3][rest_id][0] %}
+                    {{ i.name }}<br>
+                {% endfor %}
+            </td>
+            <td>
+                {% for i in week.schedule[3][rest_id][1] %}
+                    {{ i.name }}<br>
+                {% endfor %}
+            </td>
         </tr>
         <tr>
             <td>ПТ</td>
-            <td></td>
-            <td></td>
+            <td>
+                {% for i in week.schedule[4][rest_id][0] %}
+                    {{ i.name }}<br>
+                {% endfor %}
+            </td>
+            <td>
+                {% for i in week.schedule[4][rest_id][1] %}
+                    {{ i.name }}<br>
+                {% endfor %}
+            </td>
         </tr>
         <tr>
             <td>СБ</td>
-            <td></td>
-            <td></td>
+            <td>
+                {% for i in week.schedule[5][rest_id][0] %}
+                    {{ i.name }}<br>
+                {% endfor %}
+            </td>
+            <td>
+                {% for i in week.schedule[5][rest_id][1] %}
+                    {{ i.name }}<br>
+                {% endfor %}
+            </td>
         </tr>
         <tr>
             <td>ВС</td>
-            <td></td>
-            <td></td>
+            <td>
+                {% for i in week.schedule[6][rest_id][0] %}
+                    {{ i.name }}<br>
+                {% endfor %}
+            </td>
+            <td>
+                {% for i in week.schedule[6][rest_id][1] %}
+                    {{ i.name }}<br>
+                {% endfor %}
+            </td>
         </tr>
     </table>
     {% endif %}
