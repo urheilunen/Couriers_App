@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import pickle
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
@@ -199,6 +199,8 @@ def landing_reg():
 def schedule_app():
     global schedule
     global current_user
+    if not current_user:
+        return redirect('/')
     time_now = datetime.datetime.today().time()
     time_6pm = time_now.replace(hour=18, minute=0, second=0)
     if datetime.datetime.today().isoweekday() == 7 and time_now > time_6pm:
@@ -207,9 +209,11 @@ def schedule_app():
             save_schedule()
     week = schedule[-1]
     restaurant = False
+    index = False
     if request.method == 'POST':
         restaurant = request.form.get('restaurant')
-
+        index = request.form.get('index')
+        print(index)
     if restaurant:
         if restaurant == 'pf':
             rest_id = 0
@@ -230,7 +234,7 @@ def schedule_app():
 def logout():
     global current_user
     current_user = False
-    return render_template('logout.html')
+    return redirect('/')
 
 
 if __name__ == '__main__':

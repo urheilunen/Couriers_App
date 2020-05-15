@@ -20,19 +20,26 @@
     <p><a href="/logout/">Logout</a></p>
 </div>
 <div align="center">
-    <form action="" method="post">
-        <label for="pf">Профинтерна</label>
-        <input type="radio" name="restaurant" id="pf" value="pf"><br>
-        <label for="iz">Изумрудная&nbsp;&nbsp;&nbsp;</label>
-        <input type="radio" name="restaurant" id="iz" value="iz"><br>
-        <label for="zc">Чурилово&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-        <input type="radio" name="restaurant" id="zc" value="zc"><br>
-        <label for="bh">ЧМЗ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-        <input type="radio" name="restaurant" id="bh" value="bh"><br>
-        <label for="kt">Кирова&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-        <input type="radio" name="restaurant" id="kt" value="kt"><br>
-        <input type="submit" value="Выбрать">
-    </form>
+        <form action="/schedule/" method="POST">
+            <input type="hidden" name="restaurant" value="pf">
+            <input type="submit" class="btn btn-dark" value="Профинтерна">
+        </form>
+        <form action="/schedule/" method="POST">
+            <input type="hidden" name="restaurant" value="iz">
+            <input type="submit" class="btn btn-dark" value="Изумрудная">
+        </form>
+        <form action="/schedule/" method="POST">
+            <input type="hidden" name="restaurant" value="zc">
+            <input type="submit" class="btn btn-dark" value="Зальцмана">
+        </form>
+        <form action="/schedule/" method="POST">
+            <input type="hidden" name="restaurant" value="bh">
+            <input type="submit" class="btn btn-dark" value="ЧМЗ">
+        </form>
+        <form action="/schedule/" method="POST">
+            <input type="hidden" name="restaurant" value="kt">
+            <input type="submit" class="btn btn-dark" value="Кирова">
+        </form>
     <h3>{{week.get_date()}}</h3>
     {% if restaurant_selected %}
     <table border="0px">
@@ -45,12 +52,26 @@
             <td>ПН</td>
             <td>
                 {% for i in week.schedule[0][rest_id][0] %}
-                    {{ i.name }}<br>
+                    {% if i.name == 'Free' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="index" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                        </form>
+                    {% else %}
+                        {{ i.name }}
+                    {% endif %}
                 {% endfor %}
             </td>
             <td>
                 {% for i in week.schedule[0][rest_id][1] %}
-                    {{ i.name }}<br>
+                    {% if i.name == 'Free' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="index" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                        </form>
+                    {% else %}
+                        {{ i.name }}
+                    {% endif %}
                 {% endfor %}
             </td>
         </tr>
@@ -58,12 +79,26 @@
             <td>ВТ</td>
             <td>
                 {% for i in week.schedule[1][rest_id][0] %}
-                    {{ i.name }}<br>
+                    {% if i.name == 'Free' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="index" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                        </form>
+                    {% else %}
+                        {{ i.name }}
+                    {% endif %}
                 {% endfor %}
             </td>
             <td>
                 {% for i in week.schedule[1][rest_id][1] %}
-                    {{ i.name }}<br>
+                    {% if i.name == 'Free' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="index" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                        </form>
+                    {% else %}
+                        {{ i.name }}
+                    {% endif %}
                 {% endfor %}
             </td>
         </tr>
@@ -71,12 +106,26 @@
             <td>СР</td>
             <td>
                 {% for i in week.schedule[2][rest_id][0] %}
-                    {{ i.name }}<br>
+                    {% if i.name == 'Free' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="index" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                        </form>
+                    {% else %}
+                        {{ i.name }}
+                    {% endif %}
                 {% endfor %}
             </td>
             <td>
                 {% for i in week.schedule[2][rest_id][1] %}
-                    {{ i.name }}<br>
+                    {% if i.name == 'Free' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="index" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                        </form>
+                    {% else %}
+                        {{ i.name }}
+                    {% endif %}
                 {% endfor %}
             </td>
         </tr>
@@ -84,12 +133,26 @@
             <td>ЧТ</td>
             <td>
                 {% for i in week.schedule[3][rest_id][0] %}
-                    {{ i.name }}<br>
+                    {% if i.name == 'Free' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="index" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                        </form>
+                    {% else %}
+                        {{ i.name }}
+                    {% endif %}
                 {% endfor %}
             </td>
             <td>
                 {% for i in week.schedule[3][rest_id][1] %}
-                    {{ i.name }}<br>
+                    {% if i.name == 'Free' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="index" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                        </form>
+                    {% else %}
+                        {{ i.name }}
+                    {% endif %}
                 {% endfor %}
             </td>
         </tr>
@@ -97,12 +160,26 @@
             <td>ПТ</td>
             <td>
                 {% for i in week.schedule[4][rest_id][0] %}
-                    {{ i.name }}<br>
+                    {% if i.name == 'Free' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="index" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                        </form>
+                    {% else %}
+                        {{ i.name }}
+                    {% endif %}
                 {% endfor %}
             </td>
             <td>
                 {% for i in week.schedule[4][rest_id][1] %}
-                    {{ i.name }}<br>
+                    {% if i.name == 'Free' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="index" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                        </form>
+                    {% else %}
+                        {{ i.name }}
+                    {% endif %}
                 {% endfor %}
             </td>
         </tr>
@@ -110,12 +187,26 @@
             <td>СБ</td>
             <td>
                 {% for i in week.schedule[5][rest_id][0] %}
-                    {{ i.name }}<br>
+                    {% if i.name == 'Free' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="index" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                        </form>
+                    {% else %}
+                        {{ i.name }}
+                    {% endif %}
                 {% endfor %}
             </td>
             <td>
                 {% for i in week.schedule[5][rest_id][1] %}
-                    {{ i.name }}<br>
+                    {% if i.name == 'Free' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="index" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                        </form>
+                    {% else %}
+                        {{ i.name }}
+                    {% endif %}
                 {% endfor %}
             </td>
         </tr>
@@ -123,12 +214,26 @@
             <td>ВС</td>
             <td>
                 {% for i in week.schedule[6][rest_id][0] %}
-                    {{ i.name }}<br>
+                    {% if i.name == 'Free' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="index" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                        </form>
+                    {% else %}
+                        {{ i.name }}
+                    {% endif %}
                 {% endfor %}
             </td>
             <td>
                 {% for i in week.schedule[6][rest_id][1] %}
-                    {{ i.name }}<br>
+                    {% if i.name == 'Free' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="index" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                        </form>
+                    {% else %}
+                        {{ i.name }}
+                    {% endif %}
                 {% endfor %}
             </td>
         </tr>
