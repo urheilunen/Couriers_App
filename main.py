@@ -37,9 +37,9 @@ class Week:
             self.begin_date += datetime.timedelta(days=1)
         self.end_date = self.begin_date + datetime.timedelta(days=6)
         self.load = 0
-        self.schedule = []
+        self.week_schedule = []
         for day in range(7):
-            self.schedule.append([
+            self.week_schedule.append([
                 [
                     [Vacancy(self.load), Vacancy(self.load + 1), Vacancy(self.load + 2),
                      Vacancy(self.load + 3)],
@@ -64,10 +64,11 @@ class Week:
     # shift 0/1: morning/evening
     def add_vacancy(self, day, restaurant, shift):
         self.load += 1
-        self.schedule[day][restaurant][shift].append(Vacancy(self.load))
+        self.week_schedule[day][restaurant][shift].append(Vacancy(self.load))
+        save_schedule()
 
     def remove_vacancy(self, vacancy_id):
-        for day in self.schedule:
+        for day in self.week_schedule:
             for rest in day:
                 for shift in rest:
                     for vacancy in shift:
@@ -76,16 +77,16 @@ class Week:
                             break
 
     def set_vacancy(self, vacancy_id, user):
-        for day in self.schedule:
+        for day in self.week_schedule:
             for rest in day:
                 for shift in rest:
                     for vacancy in shift:
-                        if vacancy.id == vacancy_id:
+                        if vacancy.id == int(vacancy_id):
                             vacancy.set_user(user)
                             break
 
     def __str__(self):
-        for i in self.schedule:
+        for i in self.week_schedule:
             print(i)
 
 
@@ -137,11 +138,14 @@ current_user = False
 def landing():
     global current_user
     global users_database
+    if current_user:
+        return render_template('user_menu.html', username=current_user.name)
     username = False
     password = False
     if request.method == 'POST':
         username = request.form.get('username')  # запрос к данным формы
         password = request.form.get('password')
+
     if username and password:
         user_found = False
         for i in users_database:
@@ -167,6 +171,8 @@ def landing():
 @app.route('/reg/', methods=['post', 'get'])
 def landing_reg():
     global users_database
+    if current_user:
+        return render_template('user_menu.html', username=current_user.name)
     username = False
     password1 = False
     password2 = False
@@ -207,13 +213,15 @@ def schedule_app():
         if Week().begin_date != schedule[-1].begin_date:
             schedule.append(Week())
             save_schedule()
-    week = schedule[-1]
     restaurant = False
     index = False
     if request.method == 'POST':
         restaurant = request.form.get('restaurant')
         index = request.form.get('index')
         print(index)
+    if index:
+        schedule[-1].set_vacancy(index, current_user)
+        save_schedule()
     if restaurant:
         if restaurant == 'pf':
             rest_id = 0
@@ -225,9 +233,10 @@ def schedule_app():
             rest_id = 3
         if restaurant == 'kt':
             rest_id = 4
-        return render_template('app.html', current_user=current_user, week=week, restaurant_selected=True, rest_id=rest_id)
+        return render_template('app.html', current_user=current_user, week=schedule[-1], restaurant_selected=True,
+                               rest_id=rest_id)
     else:
-        return render_template('app.html', current_user=current_user, week=week)
+        return render_template('app.html', current_user=current_user, week=schedule[-1])
 
 
 @app.route('/logout/')
