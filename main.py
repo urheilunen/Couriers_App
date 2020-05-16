@@ -137,8 +137,6 @@ def save_schedule():
         pickle.dump(schedule, file)
 
 
-
-
 app = Flask(__name__)
 
 
@@ -216,7 +214,8 @@ def landing_reg():
             if not user_found:
                 users_database.append(User(username, password1))
                 save_database()
-                return render_template('index.html', message='Successfully registered!', login=True)
+                # return render_template('index.html', message='Successfully registered!', login=True)
+                return redirect('/')
             else:
                 return render_template('index.html', message='User already exists', register=True)
         else:
