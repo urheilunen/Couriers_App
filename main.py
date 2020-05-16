@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for, flash, make_response
 import pickle
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
@@ -84,6 +84,13 @@ class Week:
                         if vacancy.id == int(vacancy_id):
                             vacancy.set_user(user)
                             break
+                    if vacancy.id == int(vacancy_id):
+                        break
+                if vacancy.id == int(vacancy_id):
+                    break
+            if vacancy.id == int(vacancy_id):
+                break
+
 
     def __str__(self):
         for i in self.week_schedule:
@@ -103,6 +110,7 @@ while not empty_file:
 
 # extracting schedules from file
 empty_file = False
+schedule = []
 while not empty_file:
     with open('schedules', 'rb') as file:
         try:
@@ -110,7 +118,9 @@ while not empty_file:
             empty_file = True
         except EOFError:
             with open('schedules', 'wb') as file:
-                pickle.dump([Week(datetime.datetime.today().date() - datetime.timedelta(days=6))], file)
+                schedule.append(Week(begin_date=datetime.datetime.today().date() - datetime.timedelta(days=7)))
+                schedule.append(Week())
+                pickle.dump(schedule, file)
 
 
 # to save database every time it is modified
@@ -127,19 +137,23 @@ def save_schedule():
         pickle.dump(schedule, file)
 
 
-schedule.append(Week(begin_date=datetime.datetime.today().date() - datetime.timedelta(days=7)))
-schedule.append(Week())
+
 
 app = Flask(__name__)
-current_user = False
 
 
 @app.route('/', methods=['post', 'get'])
 def landing():
-    global current_user
     global users_database
+    global schedule
+    current_user = False
+    if request.cookies.get('user'):
+        username_from_cookie = request.cookies.get('user')
+        for i in users_database:
+            if i.name == username_from_cookie:
+                current_user = i
     if current_user:
-        return render_template('user_menu.html', username=current_user.name)
+        return render_template('app.html', current_user=current_user, week=schedule[-1])
     username = False
     password = False
     if request.method == 'POST':
@@ -154,7 +168,10 @@ def landing():
                 if i.check_password(password):
                     current_user = i
                     # successful authorization
-                    return render_template('user_menu.html', username=username)
+                    print(current_user.name)
+                    res = make_response(render_template('app.html', current_user=current_user, week=schedule[-1]))
+                    res.set_cookie('user', current_user.name, max_age=1200)
+                    return res
                 else:
                     # wrong password
                     return render_template('index.html', message='Wrong password', login=True)
@@ -171,8 +188,15 @@ def landing():
 @app.route('/reg/', methods=['post', 'get'])
 def landing_reg():
     global users_database
+    global schedule
+    current_user = False
+    if request.cookies.get('user'):
+        username_from_cookie = request.cookies.get('user')
+        for i in users_database:
+            if i.name == username_from_cookie:
+                current_user = i
     if current_user:
-        return render_template('user_menu.html', username=current_user.name)
+        return render_template('app.html', username=current_user.name, week=schedule[-1])
     username = False
     password1 = False
     password2 = False
@@ -204,21 +228,29 @@ def landing_reg():
 @app.route('/schedule/', methods=['post', 'get'])
 def schedule_app():
     global schedule
-    global current_user
+
+    current_user = False
+    if request.cookies.get('user'):
+        username_from_cookie = request.cookies.get('user')
+        for i in users_database:
+            if i.name == username_from_cookie:
+                current_user = i
     if not current_user:
         return redirect('/')
+
     time_now = datetime.datetime.today().time()
     time_6pm = time_now.replace(hour=18, minute=0, second=0)
     if datetime.datetime.today().isoweekday() == 7 and time_now > time_6pm:
         if Week().begin_date != schedule[-1].begin_date:
             schedule.append(Week())
+            print('New week created')
             save_schedule()
+
     restaurant = False
     index = False
     if request.method == 'POST':
         restaurant = request.form.get('restaurant')
         index = request.form.get('index')
-        print(index)
     if index:
         schedule[-1].set_vacancy(index, current_user)
         save_schedule()
@@ -241,9 +273,9 @@ def schedule_app():
 
 @app.route('/logout/')
 def logout():
-    global current_user
-    current_user = False
-    return redirect('/')
+    res = make_response(redirect('/'))
+    res.set_cookie('user', 'None', max_age=1)
+    return res
 
 
 if __name__ == '__main__':

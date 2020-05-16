@@ -7,7 +7,7 @@
         table {
             border-collapse: collapse;
         }
-        td, th {
+        td {
             padding: 3px;
             border-bottom: 1px solid black;
         }
@@ -20,6 +20,7 @@
     <p><a href="/logout/">Logout</a></p>
 </div>
 <div align="center">
+
         <form action="/schedule/" method="POST">
             <input type="hidden" name="restaurant" value="pf">
         {% if rest_id == 0 %}●{% endif %}
@@ -63,7 +64,7 @@
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}
+                        {{ i.name }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -75,7 +76,7 @@
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}
+                        {{ i.name }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -90,7 +91,7 @@
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}
+                        {{ i.name }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -102,7 +103,7 @@
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}
+                        {{ i.name }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -117,7 +118,7 @@
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}
+                        {{ i.name }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -129,7 +130,7 @@
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}
+                        {{ i.name }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -144,7 +145,7 @@
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}
+                        {{ i.name }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -156,7 +157,7 @@
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}
+                        {{ i.name }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -171,7 +172,7 @@
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}
+                        {{ i.name }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -183,7 +184,7 @@
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}
+                        {{ i.name }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -198,7 +199,7 @@
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}
+                        {{ i.name }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -210,7 +211,7 @@
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}
+                        {{ i.name }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -225,7 +226,7 @@
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}
+                        {{ i.name }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -237,7 +238,7 @@
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}
+                        {{ i.name }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
