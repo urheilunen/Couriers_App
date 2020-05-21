@@ -16,8 +16,9 @@
 
 <body>
 <div align="right">
-    <p>Logged in as {{ current_user.name }}</p>
-    <p><a href="/logout/">Logout</a></p>
+    <p>{{ current_user.fio }}</p>
+    {% if current_user.rank == 'admin' %}<p><a href="/reg/">Регистрация</a></p>{% endif %}
+    <p><a href="/logout/">Выход</a></p>
 </div>
 <div align="center">
 
@@ -58,19 +59,32 @@
             <td>ПН</td>
             <td>
                 {% for i in week.week_schedule[0][rest_id][0] %}
-                    {% if i.name == 'Free' %}
+                    {% if i.name == 'Забрать' %}
                         <form action="/schedule/" method="POST">
                             <input type="hidden" name="index" value="{{ i.id }}">
-                            <input type="submit" class="btn btn-dark" value="{{ i.name }}">
+                            <input type="submit" value="{{ i.name }}">
                         </form>
                     {% else %}
-                        {{ i.name }}<br>
+                        {{ i.name }}
                     {% endif %}
-                {% endfor %}
+                    {% if current_user.rank == 'admin' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="rem_vac" value="{{ i.id }}">
+                            <input type="submit" value="Удалить">
+                        </form>
+                    {% endif %}
+                {% endfor %}<br>
+
+                {% if current_user.rank == 'admin' %}
+                    <form action="/schedule/" method="POST">
+                        <input type="hidden" name="add_vac" value="0{{rest_id}}0">
+                        <input type="submit" class="btn btn-dark" value="Добавить">
+                    </form>
+                {% endif %}
             </td>
             <td>
                 {% for i in week.week_schedule[0][rest_id][1] %}
-                    {% if i.name == 'Free' %}
+                    {% if i.name == 'Забрать' %}
                         <form action="/schedule/" method="POST">
                             <input type="hidden" name="index" value="{{ i.id }}">
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
@@ -78,14 +92,27 @@
                     {% else %}
                         {{ i.name }}<br>
                     {% endif %}
+                    {% if current_user.rank == 'admin' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="rem_vac" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="Удалить">
+                        </form>
+                    {% endif %}
                 {% endfor %}
+
+                {% if current_user.rank == 'admin' %}
+                    <form action="/schedule/" method="POST">
+                            <input type="hidden" name="add_vac" value="0{{rest_id}}1">
+                            <input type="submit" class="btn btn-dark" value="Добавить">
+                        </form>
+                {% endif %}
             </td>
         </tr>
         <tr>
             <td>ВТ</td>
             <td>
                 {% for i in week.week_schedule[1][rest_id][0] %}
-                    {% if i.name == 'Free' %}
+                    {% if i.name == 'Забрать' %}
                         <form action="/schedule/" method="POST">
                             <input type="hidden" name="index" value="{{ i.id }}">
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
@@ -93,11 +120,24 @@
                     {% else %}
                         {{ i.name }}<br>
                     {% endif %}
+                    {% if current_user.rank == 'admin' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="rem_vac" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="Удалить">
+                        </form>
+                    {% endif %}
                 {% endfor %}
+
+                {% if current_user.rank == 'admin' %}
+                    <form action="/schedule/" method="POST">
+                            <input type="hidden" name="add_vac" value="1{{rest_id}}0">
+                            <input type="submit" class="btn btn-dark" value="Добавить">
+                        </form>
+                {% endif %}
             </td>
             <td>
                 {% for i in week.week_schedule[1][rest_id][1] %}
-                    {% if i.name == 'Free' %}
+                    {% if i.name == 'Забрать' %}
                         <form action="/schedule/" method="POST">
                             <input type="hidden" name="index" value="{{ i.id }}">
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
@@ -105,14 +145,27 @@
                     {% else %}
                         {{ i.name }}<br>
                     {% endif %}
+                    {% if current_user.rank == 'admin' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="rem_vac" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="Удалить">
+                        </form>
+                    {% endif %}
                 {% endfor %}
+
+                {% if current_user.rank == 'admin' %}
+                    <form action="/schedule/" method="POST">
+                            <input type="hidden" name="add_vac" value="1{{rest_id}}1">
+                            <input type="submit" class="btn btn-dark" value="Добавить">
+                        </form>
+                {% endif %}
             </td>
         </tr>
         <tr>
             <td>СР</td>
             <td>
                 {% for i in week.week_schedule[2][rest_id][0] %}
-                    {% if i.name == 'Free' %}
+                    {% if i.name == 'Забрать' %}
                         <form action="/schedule/" method="POST">
                             <input type="hidden" name="index" value="{{ i.id }}">
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
@@ -120,11 +173,24 @@
                     {% else %}
                         {{ i.name }}<br>
                     {% endif %}
+                    {% if current_user.rank == 'admin' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="rem_vac" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="Удалить">
+                        </form>
+                    {% endif %}
                 {% endfor %}
+
+                {% if current_user.rank == 'admin' %}
+                    <form action="/schedule/" method="POST">
+                            <input type="hidden" name="add_vac" value="2{{rest_id}}0">
+                            <input type="submit" class="btn btn-dark" value="Добавить">
+                        </form>
+                {% endif %}
             </td>
             <td>
                 {% for i in week.week_schedule[2][rest_id][1] %}
-                    {% if i.name == 'Free' %}
+                    {% if i.name == 'Забрать' %}
                         <form action="/schedule/" method="POST">
                             <input type="hidden" name="index" value="{{ i.id }}">
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
@@ -132,14 +198,27 @@
                     {% else %}
                         {{ i.name }}<br>
                     {% endif %}
+                    {% if current_user.rank == 'admin' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="rem_vac" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="Удалить">
+                        </form>
+                    {% endif %}
                 {% endfor %}
+
+                {% if current_user.rank == 'admin' %}
+                    <form action="/schedule/" method="POST">
+                            <input type="hidden" name="add_vac" value="2{{rest_id}}1">
+                            <input type="submit" class="btn btn-dark" value="Добавить">
+                        </form>
+                {% endif %}
             </td>
         </tr>
         <tr>
             <td>ЧТ</td>
             <td>
                 {% for i in week.week_schedule[3][rest_id][0] %}
-                    {% if i.name == 'Free' %}
+                    {% if i.name == 'Забрать' %}
                         <form action="/schedule/" method="POST">
                             <input type="hidden" name="index" value="{{ i.id }}">
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
@@ -147,11 +226,24 @@
                     {% else %}
                         {{ i.name }}<br>
                     {% endif %}
+                    {% if current_user.rank == 'admin' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="rem_vac" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="Удалить">
+                        </form>
+                    {% endif %}
                 {% endfor %}
+
+                {% if current_user.rank == 'admin' %}
+                    <form action="/schedule/" method="POST">
+                            <input type="hidden" name="add_vac" value="3{{rest_id}}0">
+                            <input type="submit" class="btn btn-dark" value="Добавить">
+                        </form>
+                {% endif %}
             </td>
             <td>
                 {% for i in week.week_schedule[3][rest_id][1] %}
-                    {% if i.name == 'Free' %}
+                    {% if i.name == 'Забрать' %}
                         <form action="/schedule/" method="POST">
                             <input type="hidden" name="index" value="{{ i.id }}">
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
@@ -159,14 +251,27 @@
                     {% else %}
                         {{ i.name }}<br>
                     {% endif %}
+                    {% if current_user.rank == 'admin' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="rem_vac" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="Удалить">
+                        </form>
+                    {% endif %}
                 {% endfor %}
+
+                {% if current_user.rank == 'admin' %}
+                    <form action="/schedule/" method="POST">
+                            <input type="hidden" name="add_vac" value="3{{rest_id}}1">
+                            <input type="submit" class="btn btn-dark" value="Добавить">
+                        </form>
+                {% endif %}
             </td>
         </tr>
         <tr>
             <td>ПТ</td>
             <td>
                 {% for i in week.week_schedule[4][rest_id][0] %}
-                    {% if i.name == 'Free' %}
+                    {% if i.name == 'Забрать' %}
                         <form action="/schedule/" method="POST">
                             <input type="hidden" name="index" value="{{ i.id }}">
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
@@ -174,11 +279,24 @@
                     {% else %}
                         {{ i.name }}<br>
                     {% endif %}
+                    {% if current_user.rank == 'admin' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="rem_vac" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="Удалить">
+                        </form>
+                    {% endif %}
                 {% endfor %}
+
+                {% if current_user.rank == 'admin' %}
+                    <form action="/schedule/" method="POST">
+                            <input type="hidden" name="add_vac" value="4{{rest_id}}0">
+                            <input type="submit" class="btn btn-dark" value="Добавить">
+                        </form>
+                {% endif %}
             </td>
             <td>
                 {% for i in week.week_schedule[4][rest_id][1] %}
-                    {% if i.name == 'Free' %}
+                    {% if i.name == 'Забрать' %}
                         <form action="/schedule/" method="POST">
                             <input type="hidden" name="index" value="{{ i.id }}">
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
@@ -186,14 +304,27 @@
                     {% else %}
                         {{ i.name }}<br>
                     {% endif %}
+                    {% if current_user.rank == 'admin' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="rem_vac" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="Удалить">
+                        </form>
+                    {% endif %}
                 {% endfor %}
+
+                {% if current_user.rank == 'admin' %}
+                    <form action="/schedule/" method="POST">
+                            <input type="hidden" name="add_vac" value="4{{rest_id}}1">
+                            <input type="submit" class="btn btn-dark" value="Добавить">
+                        </form>
+                {% endif %}
             </td>
         </tr>
         <tr>
             <td>СБ</td>
             <td>
                 {% for i in week.week_schedule[5][rest_id][0] %}
-                    {% if i.name == 'Free' %}
+                    {% if i.name == 'Забрать' %}
                         <form action="/schedule/" method="POST">
                             <input type="hidden" name="index" value="{{ i.id }}">
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
@@ -201,11 +332,24 @@
                     {% else %}
                         {{ i.name }}<br>
                     {% endif %}
+                    {% if current_user.rank == 'admin' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="rem_vac" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="Удалить">
+                        </form>
+                    {% endif %}
                 {% endfor %}
+
+                {% if current_user.rank == 'admin' %}
+                    <form action="/schedule/" method="POST">
+                            <input type="hidden" name="add_vac" value="5{{rest_id}}0">
+                            <input type="submit" class="btn btn-dark" value="Добавить">
+                        </form>
+                {% endif %}
             </td>
             <td>
                 {% for i in week.week_schedule[5][rest_id][1] %}
-                    {% if i.name == 'Free' %}
+                    {% if i.name == 'Забрать' %}
                         <form action="/schedule/" method="POST">
                             <input type="hidden" name="index" value="{{ i.id }}">
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
@@ -213,14 +357,27 @@
                     {% else %}
                         {{ i.name }}<br>
                     {% endif %}
+                    {% if current_user.rank == 'admin' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="rem_vac" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="Удалить">
+                        </form>
+                    {% endif %}
                 {% endfor %}
+
+                {% if current_user.rank == 'admin' %}
+                    <form action="/schedule/" method="POST">
+                            <input type="hidden" name="add_vac" value="5{{rest_id}}1">
+                            <input type="submit" class="btn btn-dark" value="Добавить">
+                        </form>
+                {% endif %}
             </td>
         </tr>
         <tr>
             <td>ВС</td>
             <td>
                 {% for i in week.week_schedule[6][rest_id][0] %}
-                    {% if i.name == 'Free' %}
+                    {% if i.name == 'Забрать' %}
                         <form action="/schedule/" method="POST">
                             <input type="hidden" name="index" value="{{ i.id }}">
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
@@ -228,11 +385,24 @@
                     {% else %}
                         {{ i.name }}<br>
                     {% endif %}
+                    {% if current_user.rank == 'admin' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="rem_vac" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="Удалить">
+                        </form>
+                    {% endif %}
                 {% endfor %}
+
+                {% if current_user.rank == 'admin' %}
+                    <form action="/schedule/" method="POST">
+                            <input type="hidden" name="add_vac" value="6{{rest_id}}0">
+                            <input type="submit" class="btn btn-dark" value="Добавить">
+                        </form>
+                {% endif %}
             </td>
             <td>
                 {% for i in week.week_schedule[6][rest_id][1] %}
-                    {% if i.name == 'Free' %}
+                    {% if i.name == 'Забрать' %}
                         <form action="/schedule/" method="POST">
                             <input type="hidden" name="index" value="{{ i.id }}">
                             <input type="submit" class="btn btn-dark" value="{{ i.name }}">
@@ -240,7 +410,20 @@
                     {% else %}
                         {{ i.name }}<br>
                     {% endif %}
+                    {% if current_user.rank == 'admin' %}
+                        <form action="/schedule/" method="POST">
+                            <input type="hidden" name="rem_vac" value="{{ i.id }}">
+                            <input type="submit" class="btn btn-dark" value="Удалить">
+                        </form>
+                    {% endif %}
                 {% endfor %}
+
+                {% if current_user.rank == 'admin' %}
+                    <form action="/schedule/" method="POST">
+                            <input type="hidden" name="add_vac" value="6{{rest_id}}1">
+                            <input type="submit" class="btn btn-dark" value="Добавить">
+                        </form>
+                {% endif %}
             </td>
         </tr>
     </table>

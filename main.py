@@ -6,10 +6,12 @@ import datetime
 
 # defining user class
 class User:
-    def __init__(self, name, password):
+    def __init__(self, name, password, fio, rank):
         self.name = name
         self.password = generate_password_hash(password)
         self.id = None
+        self.fio = fio
+        self.rank = rank
 
     def check_password(self, password_to_be_checked):
         return check_password_hash(self.password, password_to_be_checked)
@@ -19,15 +21,15 @@ class Vacancy:
     def __init__(self, id_num):
         self.id = id_num
         self.user = None
-        self.name = 'Free'
+        self.name = 'Забрать'
 
     def set_user(self, user):
         self.user = user
-        self.name = user.name
+        self.name = user.fio
 
     def remove_user(self):
         self.user = None
-        self.name = 'Free'
+        self.name = 'Забрать'
 
 
 class Week:
@@ -60,8 +62,7 @@ class Week:
     def get_date(self):
         return str(self.begin_date.strftime('%d/%m/%Y')) + '-' + str(self.end_date.strftime('%d/%m/%Y'))
 
-    # restaurant 0-4: pf-kt
-    # shift 0/1: morning/evening
+    """ day 0-6: monday-sunday; restaurant 0-4: pf-kt; shift 0/1: morning/evening """
     def add_vacancy(self, day, restaurant, shift):
         self.load += 1
         self.week_schedule[day][restaurant][shift].append(Vacancy(self.load))
@@ -75,6 +76,17 @@ class Week:
                         if vacancy.id == vacancy_id:
                             shift.remove(vacancy)
                             break
+        save_schedule()
+
+    def check_if_user_is_working_this_day(self, day, user):
+        user_found = False
+        for rest in day:
+            for shift in rest:
+                for vacancy in shift:
+                    if user.fio == vacancy.name:
+                        user_found = True
+                        break
+        return user_found
 
     def set_vacancy(self, vacancy_id, user):
         for day in self.week_schedule:
@@ -82,7 +94,9 @@ class Week:
                 for shift in rest:
                     for vacancy in shift:
                         if vacancy.id == int(vacancy_id):
-                            vacancy.set_user(user)
+                            # found needed vacancy, now checking if user is already working this day
+                            if not self.check_if_user_is_working_this_day(day, user):
+                                vacancy.set_user(user)
                             break
                     if vacancy.id == int(vacancy_id):
                         break
@@ -91,13 +105,12 @@ class Week:
             if vacancy.id == int(vacancy_id):
                 break
 
-
     def __str__(self):
         for i in self.week_schedule:
             print(i)
 
 
-# extracting database from file
+# extracting users database from file
 empty_file = False
 while not empty_file:
     with open('users', 'rb') as file:
@@ -105,8 +118,9 @@ while not empty_file:
             users_database = pickle.load(file)
             empty_file = True
         except EOFError:
+            # if database is empty, then create admin account
             with open('users', 'wb') as file:
-                pickle.dump([], file)
+                pickle.dump([User('admin', 'adminpasswd', 'Админ Админ', 'admin')], file)
 
 # extracting schedules from file
 empty_file = False
@@ -117,6 +131,7 @@ while not empty_file:
             schedule = pickle.load(file)
             empty_file = True
         except EOFError:
+            # if database is empty, then create current week
             with open('schedules', 'wb') as file:
                 schedule.append(Week(begin_date=datetime.datetime.today().date() - datetime.timedelta(days=7)))
                 schedule.append(Week())
@@ -151,6 +166,7 @@ def landing():
             if i.name == username_from_cookie:
                 current_user = i
     if current_user:
+        # if logged in, then render app.html
         return render_template('app.html', current_user=current_user, week=schedule[-1])
     username = False
     password = False
@@ -158,15 +174,18 @@ def landing():
         username = request.form.get('username')  # запрос к данным формы
         password = request.form.get('password')
 
+    # if name and pass were given
     if username and password:
         user_found = False
+        # start searching for this user
         for i in users_database:
             if i.name == username:
                 user_found = True
+                # user found, now checking password
                 if i.check_password(password):
                     current_user = i
                     # successful authorization
-                    print(current_user.name)
+                    print(current_user.fio)
                     res = make_response(render_template('app.html', current_user=current_user, week=schedule[-1]))
                     res.set_cookie('user', current_user.name, max_age=1200)
                     return res
@@ -177,10 +196,6 @@ def landing():
             return render_template('index.html', message='No such user', login=True)
     else:
         return render_template('index.html', login=True)
-    # if not CURRENT_USER:
-    #     return render_template('index.html', login=True)
-    # else:
-    #     return render_template('index.html', user=CURRENT_USER)
 
 
 @app.route('/reg/', methods=['post', 'get'])
@@ -188,13 +203,16 @@ def landing_reg():
     global users_database
     global schedule
     current_user = False
+    #
     if request.cookies.get('user'):
         username_from_cookie = request.cookies.get('user')
         for i in users_database:
             if i.name == username_from_cookie:
                 current_user = i
-    if current_user:
-        return render_template('app.html', username=current_user.name, week=schedule[-1])
+    if not current_user:
+        return redirect('/')
+    if current_user.rank != 'admin':
+        return render_template('app.html', current_user=current_user, week=schedule[-1])
     username = False
     password1 = False
     password2 = False
@@ -202,8 +220,11 @@ def landing_reg():
         username = request.form.get('username')  # запрос к данным формы
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
+        fio = request.form.get('fio')
+        rank = request.form.get('rank')
+        print(fio)
 
-    if username and password1 and password2:
+    if username and password1 and password2 and fio and rank:
         if password1 == password2:
             # input users_data alright, begin working with database
             user_found = False
@@ -212,22 +233,24 @@ def landing_reg():
                     user_found = True
                     break
             if not user_found:
-                users_database.append(User(username, password1))
+                users_database.append(User(username, password1, fio, rank))
                 save_database()
-                # return render_template('index.html', message='Successfully registered!', login=True)
                 return redirect('/')
             else:
-                return render_template('index.html', message='User already exists', register=True)
+                return render_template('index.html', message='Пользователь с такими именем уже существует',
+                                       register=True, current_user=current_user)
         else:
-            return render_template('index.html', message="Passwords don't match!", register=True)
+            return render_template('index.html', message="Пароли не совпадают", register=True,
+                                   current_user=current_user)
     else:
-        return render_template('index.html', register=True)
+        return render_template('index.html', register=True, current_user=current_user)
 
 
 @app.route('/schedule/', methods=['post', 'get'])
 def schedule_app():
     global schedule
-
+    if request.cookies.get('rest_id'):
+        rest_id_from_cookie = request.cookies.get('rest_id')
     current_user = False
     if request.cookies.get('user'):
         username_from_cookie = request.cookies.get('user')
@@ -247,12 +270,20 @@ def schedule_app():
 
     restaurant = False
     index = False
+    add_vac = False
+    rem_vac = False
     if request.method == 'POST':
         restaurant = request.form.get('restaurant')
         index = request.form.get('index')
+        add_vac = request.form.get('add_vac')
+        rem_vac = request.form.get('rem_vac')
     if index:
         schedule[-1].set_vacancy(index, current_user)
         save_schedule()
+    if add_vac:
+        schedule[-1].add_vacancy(int(add_vac[0]), int(add_vac[1]), int(add_vac[2]))
+    if rem_vac:
+        schedule[-1].remove_vacancy(int(rem_vac))
     if restaurant:
         if restaurant == 'pf':
             rest_id = 0

@@ -10,24 +10,32 @@
         {{ message }}
     {% endif %}
     {% if login %}
-    <h3>Login</h3>
+    <h3>Вход</h3>
     <form action="" method="post">
-        <p><label for="username"><input type="text" name="username" placeholder="Username"></label></p>
-        <p><label for="password"><input type="password" name="password" placeholder="Password"></label></p>
+        <p><label for="username"><input type="text" name="username" placeholder="Ник" required></label></p>
+        <p><label for="password"><input type="password" name="password" placeholder="Пароль" required></label></p>
             <input type="submit" value="Submit">
     </form>
-    <br><a href="/reg/">Register</a>
+    <br>
     {% endif %}
 
     {% if register %}
-    <h3>Register</h3>
+    <div align="right">
+    <p>Logged in as {{ current_user.name }}</p>
+    {% if current_user.rank == 'admin' %}<p><a href="/reg/">Регистрация</a></p>{% endif %}
+        <p><a href="/">На главную</a></p>
+    <p><a href="/logout/">Выход</a></p>
+    </div>
+    <h3>Зарегистрировать нового пользователя</h3>
         <form action="" method="post">
-        <p><label for="username"><input type="text" name="username" placeholder="Username"></label></p>
-        <p><label for="password1"><input type="password" name="password1" placeholder="Password"></label></p>
-        <p><label for="password2"><input type="password" name="password2" placeholder="Password again"></label></p>
-        <input type="submit" value="Submit">
+        <p><label for="username"><input type="text" name="username" placeholder="Никнейм" required></label></p>
+        <p><label for="password1"><input type="password" name="password1" placeholder="Пароль" required></label></p>
+        <p><label for="password2"><input type="password" name="password2" placeholder="Повторите пароль" required></label></p>
+        <p><label for="firstname"><input type="text" name="fio" placeholder="Фамилия Имя" required></label></p>
+        <p><label for="isadmin">Админ</label><input type="radio" name="rank" value="admin" required></p>
+        <p><label for="ascourier">Курьер</label><input type="radio" name="rank" value="courier" required></p>
+        <input type="submit" value="Зарегистрировать">
     </form>
-    <br><a href="/">Login</a>
     {% endif %}
 </body>
 </html>
